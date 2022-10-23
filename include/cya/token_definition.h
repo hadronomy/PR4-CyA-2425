@@ -6,22 +6,31 @@
 #include <regex>
 #include <functional>
 
+namespace cya {
+
+class Token;
+
 class TokenDefinition {
  public:
   TokenDefinition(
-    const std::string& name, 
-    const std::regex& regex, 
-    std::function<void(std::map<std::string, std::string>&)> serializer) : 
-    name_(name), regex_(regex), serializer_() { }
+          const std::string& name,
+          const std::regex& regex,
+          std::function<std::map<std::string, std::string>(const std::smatch &)> serializer,
+          std::function<std::string(const Token&)> to_string) :
+          name_(name), regex_(regex), serializer_(serializer), to_string_func_(to_string) {}
 
-  std::string GetName() const { return name_; }
-  std::regex GetRegex() const { return regex_; }
-  std::function<void(std::map<std::string, std::string>&)> GetSerializer() const { return serializer_; }
+  inline std::string GetName() const { return name_; }
+  inline std::regex GetRegex() const { return regex_; }
+  inline std::function<std::map<std::string, std::string>(const std::smatch &)> GetSerializer() const { return serializer_; }
+  inline std::function<std::string(const Token&)> GetToString() const { return to_string_func_; }
 
  private:
   std::string name_;
   std::regex regex_;
-  std::function<void(std::map<std::string, std::string>&)> serializer_;
+  std::function<std::map<std::string, std::string>(const std::smatch &)> serializer_;
+  std::function<std::string(const Token&)> to_string_func_;
 };
+
+}
 
 #endif

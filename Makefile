@@ -1,6 +1,5 @@
 PROJECT_NAME = PR4-CYA-2223
 
-
 cmake:
 	cmake -S . -B build
 
