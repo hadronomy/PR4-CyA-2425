@@ -24,11 +24,11 @@
 int main(int argc, const char* argv[]) {
   cya::Command root_cmd("cya <input_file>");
   root_cmd.Parse(argc, argv);
-  cya::TokenDefinition statement_definition("STATEMENTS", std::regex(R"((while|for) \(.*\))"), [](const std::smatch& match) {
+  cya::TokenDefinition statement_definition("STATEMENTS", std::regex(R"((while|for) \(.*\))"),[](const std::smatch& match) {
     std::map<std::string, std::string> values;
     values.emplace("type", match[1]);
     return values;
-  }, [](const cya::Token& token) {
+  }, [](const cya::Token& token) -> std::string {
     std::stringstream result;
     result << "[Line " << token.GetLine() << "] LOOP: " << token.GetValues().at("type");
     return result.str();

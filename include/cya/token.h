@@ -23,6 +23,8 @@ class Token {
     inline std::map<std::string, std::string> GetValues() const { return values_; }
     inline std::function<std::string(const Token&)> GetToString() const { return to_string_func_; }
 
+    inline std::string ToString() const { return to_string_func_(*this); }
+
     friend std::ostream& operator <<(std::ostream& out, const Token& input_token);
  private:
   int line_;

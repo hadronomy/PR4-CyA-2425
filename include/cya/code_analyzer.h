@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 #include <map>
 
 #include "token_definition.h"
@@ -13,9 +14,9 @@ namespace cya {
 
 class CodeAnalyzer {
  public:
-  explicit CodeAnalyzer(const std::vector<TokenDefinition>& definitions) : token_definitions_(definitions), tokens_() {}
+  explicit CodeAnalyzer(const std::vector<TokenDefinition>& definitions) : token_definitions_(definitions), tokens_() { }
   template<class... TType>
-  explicit CodeAnalyzer(TType... definition) : CodeAnalyzer(std::vector<TokenDefinition>{definition...}) {}
+  explicit CodeAnalyzer(TType... definition) : CodeAnalyzer(std::vector<TokenDefinition>{definition...}) { }
 
   inline std::vector<Token> GetTokens(const std::string& token_name) const { 
     if (!tokens_.count(token_name))

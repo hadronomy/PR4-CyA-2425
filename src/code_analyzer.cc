@@ -14,7 +14,6 @@ void CodeAnalyzer::Analyze(const std::vector<std::string>& lines) {
       std::smatch match;
       if (std::regex_search(line, match, definition.GetRegex())) {
         std::map<std::string, std::string> values = definition.GetSerializer()(match);
-        values.emplace("line", line);
         Token token(i + 1, 0, values, definition.GetToString());
         AddToken(definition.GetName(), token);
       }
