@@ -20,74 +20,83 @@
 #include "cya/code_analyzer.h"
 #include "cya/token_definition.h"
 #include "cya/command.h"
+#include "cya/token_definitions.h"
+#include "cya/utils.h"
+
+void PrintMultiline(std::ostream& out, const std::vector<cya::Token>& tokens) {
+  if (tokens.front().GetLine() == tokens.back().GetLine()) {
+    out << "[Line " << tokens.front().GetLine() << "]" << std::endl;
+  } else {
+    out << "[Line " << tokens.front().GetLine() << "-" << tokens.back().GetLine() << "]" << std::endl;
+  }
+  for (const auto& token : tokens) {
+    out << token << std::endl;
+  }
+}
+
+void PrintMultilineBlocks(std::ostream& out, const std::vector<std::vector<cya::Token>>& blocks) {
+  for (const auto& block : blocks) {
+    PrintMultiline(out, block);
+  }
+}
+
+std::vector<std::vector<cya::Token>> ParseMultiline(const std::vector<cya::Token>& tokens) {
+  std::vector<std::vector<cya::Token>> blocks;
+  if (tokens.empty()) return blocks;
+  std::vector<cya::Token> contiguous_tokens;
+  contiguous_tokens.push_back(tokens.front());
+  for (int i = 1; i < tokens.size(); ++i) {
+    const auto& kToken = tokens[i];
+    if (contiguous_tokens.front().GetLine() + contiguous_tokens.size() != kToken.GetLine()) {
+      blocks.emplace_back(contiguous_tokens);
+      contiguous_tokens = std::vector<cya::Token>();
+    }
+    contiguous_tokens.push_back(kToken);
+  }
+  if (contiguous_tokens.empty()) return blocks;
+  blocks.emplace_back(contiguous_tokens);
+  return blocks;
+}
 
 int main(int argc, const char* argv[]) {
-  cya::Command root_cmd("cya <input_file>");
-  root_cmd.Parse(argc, argv);
-  cya::TokenDefinition statement_definition("STATEMENTS", std::regex(R"((while|for) \(.*\))"),[](const std::smatch& match) {
-    std::map<std::string, std::string> values;
-    values.emplace("type", match[1]);
-    return values;
-  }, [](const cya::Token& token) -> std::string {
-    std::stringstream result;
-    result << "[Line " << token.GetLine() << "] LOOP: " << token.GetValues().at("type");
-    return result.str();
-  });
-  cya::TokenDefinition variable_definition("VARIABLES", std::regex(R"((int|double) +(.*) += +([0-9]+))"), [](const std::smatch& match) {
-    std::map<std::string, std::string> values;
-    values.emplace("type", match[1]);
-    values.emplace("name", match[2]);
-    values.emplace("value", match[3]);
-    return values;
-  }, [](const cya::Token& token) {
-    std::stringstream result;
-    result << "[Line " << token.GetLine() << "] " << token.GetValues().at("type") << ": ";
-    result << token.GetValues().at("name");
-    return result.str();
-  });
-  cya::TokenDefinition comment_definition("COMMENT", std::regex(R"((/\*\*( |.)*)|( *\*( |.)*)|( *\*/))"), [](const std::smatch& match) {
-    std::map<std::string, std::string> values;
-    values.emplace("value", match[0]);
-    return values;
-  }, [](const cya::Token& token) {
-    std::stringstream result;
-    result << token.GetValue("value");
-    return result.str();
-  });
-  cya::CodeAnalyzer code_analyzer(statement_definition, variable_definition, comment_definition);
-  std::vector<std::string> lines {
-    "/** Holis",
-    "  * Pepe",
-    "  */",
-    "while (true)",
-    "hey.no",
-    "for (true)",
-    "int holi = 10"
-  };
+  cya::Command root_cmd = cya::Command("cya <input_file> <output_file>")
+          .SetPositionalArgumentsRange(2, 2)
+          .Parse(argc, argv);
+  cya::CodeAnalyzer code_analyzer(cya::kTokenDefinitions);
+  std::vector<std::string> lines = cya::ReadFileLines(root_cmd.GetPositionalArg(0));
   code_analyzer.Analyze(lines);
-  for (const auto& pair : code_analyzer.GetAllTokens()) {
-    const auto& kTokens = pair.second;
-    std::cout << pair.first << std::endl;
-    std::vector<cya::Token> contiguous_tokens;
-    contiguous_tokens.push_back(kTokens.front());
-    for (int i = 1; i < kTokens.size(); ++i) {
-      const auto& kToken = kTokens[i];
-      if (contiguous_tokens.front().GetLine() + contiguous_tokens.size() != kToken.GetLine()) {
-        std::cout << "[ Line " << contiguous_tokens.front().GetLine() << "-" << contiguous_tokens.back().GetLine() << " ]";
-        std::cout << std::endl;
-        for (const auto& contiguous_token : contiguous_tokens) {
-          std::cout << contiguous_token << std::endl;
-        }
-        contiguous_tokens = std::vector<cya::Token>();
-      }
-      contiguous_tokens.push_back(kToken);
-    }
-    if (contiguous_tokens.empty()) return 0;
-    std::cout << "[ Line " << contiguous_tokens.front().GetLine() << "-" << contiguous_tokens.back().GetLine() << " ]";
-    std::cout << std::endl;
-    for (const auto& token : contiguous_tokens) {
+  std::cout << "PROGRAM: " << root_cmd.GetPositionalArg(0) << std::endl;
+  auto blocks = ParseMultiline(code_analyzer.GetTokens("COMMENTS"));
+  const bool kHasDescription = code_analyzer.HasTokens("COMMENTS") &&
+          code_analyzer.GetTokens("COMMENTS").front().GetLine() == 1;
+  code_analyzer.RemoveTokens("COMMENTS");
+  if (kHasDescription) {
+    std::cout << "DESCRIPTION: " << std::endl;
+    for (const auto& token : blocks.at(0)) {
       std::cout << token << std::endl;
     }
+    std::cout << std::endl;
   }
+  for (const auto& pair : code_analyzer.GetAllTokens()) {
+    const auto& kTokens = pair.second;
+    std::cout << pair.first << ":" << std::endl;
+    if (code_analyzer.IsMultiline(pair.first)) {
+      PrintMultiline(std::cout, pair.second);
+    } else {
+      for (const auto& token : kTokens) {
+        std::cout << token << std::endl;
+      }
+    }
+    std::cout << std::endl;
+  }
+  std::cout << "COMMENTS: " << std::endl;
+  if (kHasDescription) {
+    auto description_block = blocks.at(0);
+    std::cout << "[Line " << description_block.front().GetLine() << "-" << description_block.back().GetLine() << "] ";
+    std::cout << "DESCRIPTION" << std::endl;
+    blocks = std::vector<std::vector<cya::Token>>(blocks.begin() + 1, blocks.end());
+  }
+  PrintMultilineBlocks(std::cout, blocks);
+  std::cout << std::endl;
   return 0;
 }

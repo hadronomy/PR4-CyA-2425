@@ -3,6 +3,7 @@
 #define CYA_TOKEN_H_
 
 #include <map>
+#include <set>
 #include <ostream>
 #include <string>
 #include <functional>

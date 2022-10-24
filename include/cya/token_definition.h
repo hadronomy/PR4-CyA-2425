@@ -17,13 +17,14 @@ class TokenDefinition {
           const std::regex& regex,
           std::function<std::map<std::string, std::string>(const std::smatch&)> serializer,
           std::function<std::string(const Token&)> to_string,
-          const bool is_multiple = false) :
-          name_(name), regex_(regex), serializer_(serializer), to_string_func_(to_string), is_multiline_(is_multiple) { }
+          const bool is_multiline = false) :
+          name_(name), regex_(regex), serializer_(serializer), to_string_func_(to_string), is_multiline_(is_multiline) { }
 
   inline std::string GetName() const { return name_; }
   inline std::regex GetRegex() const { return regex_; }
   inline std::function<std::map<std::string, std::string>(const std::smatch&)> GetSerializer() const { return serializer_; }
   inline std::function<std::string(const Token&)> GetToString() const { return to_string_func_; }
+  inline bool IsMultiline() const { return is_multiline_; }
 
  private:
   std::string name_;
