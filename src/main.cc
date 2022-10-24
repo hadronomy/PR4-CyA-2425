@@ -66,8 +66,26 @@ int main(int argc, const char* argv[]) {
   };
   code_analyzer.Analyze(lines);
   for (const auto& pair : code_analyzer.GetAllTokens()) {
+    const auto& kTokens = pair.second;
     std::cout << pair.first << std::endl;
-    for (const auto& token : pair.second) {
+    std::vector<cya::Token> contiguous_tokens;
+    contiguous_tokens.push_back(kTokens.front());
+    for (int i = 1; i < kTokens.size(); ++i) {
+      const auto& kToken = kTokens[i];
+      if (contiguous_tokens.front().GetLine() + contiguous_tokens.size() != kToken.GetLine()) {
+        std::cout << "[ Line " << contiguous_tokens.front().GetLine() << "-" << contiguous_tokens.back().GetLine() << " ]";
+        std::cout << std::endl;
+        for (const auto& contiguous_token : contiguous_tokens) {
+          std::cout << contiguous_token << std::endl;
+        }
+        contiguous_tokens = std::vector<cya::Token>();
+      }
+      contiguous_tokens.push_back(kToken);
+    }
+    if (contiguous_tokens.empty()) return 0;
+    std::cout << "[ Line " << contiguous_tokens.front().GetLine() << "-" << contiguous_tokens.back().GetLine() << " ]";
+    std::cout << std::endl;
+    for (const auto& token : contiguous_tokens) {
       std::cout << token << std::endl;
     }
   }

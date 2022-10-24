@@ -16,8 +16,9 @@ class TokenDefinition {
           const std::string& name,
           const std::regex& regex,
           std::function<std::map<std::string, std::string>(const std::smatch&)> serializer,
-          std::function<std::string(const Token&)> to_string) :
-          name_(name), regex_(regex), serializer_(serializer), to_string_func_(to_string) { }
+          std::function<std::string(const Token&)> to_string,
+          const bool is_multiple = false) :
+          name_(name), regex_(regex), serializer_(serializer), to_string_func_(to_string), is_multiline_(is_multiple) { }
 
   inline std::string GetName() const { return name_; }
   inline std::regex GetRegex() const { return regex_; }
@@ -27,9 +28,9 @@ class TokenDefinition {
  private:
   std::string name_;
   std::regex regex_;
-  bool is_multiline_;
   std::function<std::map<std::string, std::string>(const std::smatch&)> serializer_;
   std::function<std::string(const Token&)> to_string_func_;
+  bool is_multiline_;
 };
 
 }
