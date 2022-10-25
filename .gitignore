@@ -1044,6 +1044,8 @@ dkms.conf
 
 # Custom
 
+.idea
+.vscode
 *.tar.gz
 !Makefile
 .psmt/origin
