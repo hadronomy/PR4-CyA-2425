@@ -14,7 +14,7 @@ Hay tres formas principales en las que se puede realizar la práctica.
 Mi implementación está realizada empleando programación funcional.
 
 Otra opción y seguramente la empleada por la mayoría, es el uso de herencia.
-El cuál descarté debido a que requeriría redifinir(`override`) una clase principal
+El cual descarté debido a que requeriría redifinir(`override`) una clase principal
 por cada uno de los diferentes tokens a encontrar. Además de que al realizarlo de esta forma
 se introduce un gran **overhead**, puesto que el compilador tiene que crear una `vtable` por
 cada `override` de la clase principal.
@@ -40,7 +40,7 @@ Dicha implementación consta principalmente de tres clases.
 e imprimir los **Tokens** a partir del texto provisto.
 
 **CodeAnalyzer** se encarga, a partir de una lista de **TokenDefinition**s de encontrar y crear
-todos los tokens en el texto dado. Este proceso se realiza linea por linea.
+todos los tokens en el texto dado. Este proceso se realiza línea por línea.
 
 ### Compilar
 ```bash
