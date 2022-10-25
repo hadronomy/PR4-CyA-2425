@@ -14,11 +14,8 @@
  */
 
 #include <iostream>
-#include <regex>
-#include <sstream>
 
 #include "cya/code_analyzer.h"
-#include "cya/token_definition.h"
 #include "cya/command.h"
 #include "cya/token_definitions.h"
 #include "cya/utils.h"
