@@ -1,3 +1,17 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingenierıa Informática
+ * Asignatura: Computabilidad y Algoritmia
+ * Curso: 2º
+ * Práctica 4: Code Analyzer Curso 2022-2023
+ * Grado en Ingeniería Informática Computabilidad y Algoritmia
+ * Autor: Pablo Hernández Jiménez
+ * Correo: alu0101495934@ull.edu.es
+ * Fecha: 24/10/2022
+ * Archivo command.h: Command definition
+ * Referencias:
+ */
 
 #ifndef COMMAND_CLI_H_
 #define COMMAND_CLI_H_

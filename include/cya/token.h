@@ -1,3 +1,17 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingenierıa Informática
+ * Asignatura: Computabilidad y Algoritmia
+ * Curso: 2º
+ * Práctica 4: Code Analyzer Curso 2022-2023
+ * Grado en Ingeniería Informática Computabilidad y Algoritmia
+ * Autor: Pablo Hernández Jiménez
+ * Correo: alu0101495934@ull.edu.es
+ * Fecha: 24/10/2022
+ * Archivo token.h: cya::Token definition
+ * Referencias:
+ */
 
 #ifndef CYA_TOKEN_H_
 #define CYA_TOKEN_H_
@@ -15,7 +29,7 @@ class Token {
   Token(const int line,
         const int position,
         const std::map<std::string, std::string>& values,
-        std::function<std::string(const Token&)> to_string_func) :
+        const std::function<std::string(const Token&)>& to_string_func) :
     line_(line), position_(position), values_(values), to_string_func_(to_string_func) { }
 
     inline int GetLine() const { return line_; }

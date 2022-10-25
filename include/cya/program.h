@@ -9,17 +9,31 @@
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
  * Fecha: 24/10/2022
- * Archivo token.cc: cya::Token implementation
+ * Archivo program.h: Program definition
  * Referencias:
  */
 
-#include "cya/token.h"
+#ifndef CYA_PROGRAM_H_
+#define CYA_PROGRAM_H_
+
+#include "cya/command.h"
 
 namespace cya {
 
-std::ostream& operator<<(std::ostream& out, const Token& input_token) {
-  out << input_token.to_string_func_(input_token);
-  return out;
-}
+class Program {
+ public:
+  Program() : command_("") {
+    command_.SetPositionalArgumentsRange(2, 2);
+  }
 
-}
+  inline Command& GetCli() { return command_; }
+
+  void Run(const int argc, const char* argv[]);
+
+ private:
+  Command command_;
+};
+
+} // cya
+
+#endif //CYA_PROGRAM_H_

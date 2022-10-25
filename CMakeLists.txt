@@ -8,6 +8,5 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJECT_SHORTNAME "cya")
 set(CMAKE_BUILD_TYPE Debug)
 
-
 add_subdirectory("src")
 add_subdirectory("test")

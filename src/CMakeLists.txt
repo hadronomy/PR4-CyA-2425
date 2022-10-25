@@ -5,7 +5,6 @@ list(REMOVE_ITEM SOURCES "main.cc")
 message(STATUS "Found sources: ${SOURCES}")
 
 add_executable("cya")
-
 set_target_properties("cya" PROPERTIES ENABLE_EXPORTS TRUE)
 
 target_sources("cya"

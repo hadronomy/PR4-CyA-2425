@@ -26,4 +26,3 @@ COMMENTS:
 [Line 1-12] DESCRIPTION
 [Line 19]
 // Returns the factorial of the argument
-
