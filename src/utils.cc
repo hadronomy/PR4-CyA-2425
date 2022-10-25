@@ -52,6 +52,11 @@ std::vector<std::string> ReadFileLines(const std::string& input_file_path) {
   return lines;
 }
 
+/**
+ * @brief Prints a multiline representation of the given tokens
+ * @param out
+ * @param tokens
+ */
 void PrintMultiline(std::ostream& out, const std::vector<Token>& tokens) {
   if (tokens.front().GetLine() == tokens.back().GetLine()) {
     out << "[Line " << tokens.front().GetLine() << "]" << std::endl;
@@ -63,12 +68,23 @@ void PrintMultiline(std::ostream& out, const std::vector<Token>& tokens) {
   }
 }
 
+/**
+ * @brief Prints all the multiline blocks within the given blocks
+ * @param out
+ * @param blocks
+ */
 void PrintMultilineBlocks(std::ostream& out, const std::vector<std::vector<Token>>& blocks) {
   for (const auto& block : blocks) {
     PrintMultiline(out, block);
   }
 }
 
+/**
+ * @brief Parses a list of tokens and returns a list of vectors containing
+ * the continuous lines
+ * @param tokens
+ * @return
+ */
 std::vector<std::vector<cya::Token>> ParseMultiline(const std::vector<cya::Token>& tokens) {
   std::vector<std::vector<cya::Token>> blocks;
   if (tokens.empty()) return blocks;

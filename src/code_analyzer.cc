@@ -21,6 +21,10 @@
 
 namespace cya {
 
+/**
+ * @brief Analyzes the given lines and saves the resulting tokens
+ * @param lines
+ */
 void CodeAnalyzer::Analyze(const std::vector<std::string>& lines) {
   for (int i = 0; i < lines.size(); ++i) {
     const auto& line = lines[i];

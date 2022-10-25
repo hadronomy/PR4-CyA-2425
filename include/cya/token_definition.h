@@ -24,6 +24,10 @@ namespace cya {
 
 class Token;
 
+/**
+ * @brief Defines all the properties required to find and work
+ * with tokens within a text
+ */
 class TokenDefinition {
  public:
   TokenDefinition(

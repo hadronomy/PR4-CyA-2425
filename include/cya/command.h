@@ -21,30 +21,43 @@
 #include <memory>
 #include <vector>
 
+#include "cya/args.h"
+
 namespace cya {
 
+/**
+ * @brief Class that facilitates the creation of a command line interface
+ */
 class Command {
  public:
   explicit Command(
-          const std::string& usage,
-          const std::string& description = "",
-          const std::string& short_desc = "",
-          const std::string& long_desc = ""
+          const std::string& usage
   ) : usage_(usage),
-      description_(description),
-      short_(short_desc),
-      long_(long_desc),
+      short_(),
+      long_(),
       min_positional_(0),
       max_positional_(0),
-      positional_args_() { }
+      positional_args_(),
+      args_() {
+    args_.ExpectBool("help", "h");
+  }
 
   inline std::string GetUsage() const { return usage_; }
-  inline std::string GetDescription() const { return description_; }
   inline std::string GetShort() const { return short_; }
   inline std::string GetLong() const { return long_; }
   inline std::map<std::string, std::shared_ptr<Command>> GetSubcommands() const { return subcommands_; }
   inline std::vector<std::string> GetPositionalArgs() const { return positional_args_; }
   inline std::string GetPositionalArg(const int index) const { return positional_args_.at(index); }
+  inline Args& GetArgs() { return args_; }
+
+  inline Command& SetShort(const std::string& description) {
+    short_ = description;
+    return static_cast<Command&>(*this);
+  }
+  inline Command& SetLong(const std::string& description) {
+    long_ = description;
+    return static_cast<Command&>(*this);
+  }
 
   inline Command& AddSubcommand(const Command& subcommand) {
     if (!subcommands_.count(subcommand.GetUsage())) {
@@ -58,19 +71,20 @@ class Command {
     max_positional_ = max;
     return static_cast<Command&>(*this);
   }
+  void ShowHelp() const;
 
   Command& Parse(const int argc, const char *argv[]);
   Command& Parse(const std::vector<std::string>& arguments);
 
  private:
   std::string usage_;
-  std::string description_;
   std::string short_;
   std::string long_;
   std::map<std::string, std::shared_ptr<Command>> subcommands_;
   int min_positional_;
   int max_positional_;
   std::vector<std::string> positional_args_;
+  Args args_;
 };
 
 }

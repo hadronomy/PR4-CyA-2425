@@ -16,16 +16,28 @@
 #ifndef CYA_PROGRAM_H_
 #define CYA_PROGRAM_H_
 
+#include <sstream>
+
 #include "cya/command.h"
 
 namespace cya {
 
+/**
+ * @brief Defines main program functionality
+ */
 class Program {
  public:
-  Program() : command_("") {
+  Program() : command_("cya <input_file> <output_file>") {
     command_.SetPositionalArgumentsRange(2, 2);
+    std::stringstream description;
+    description << "Analyzes the given <input_file> and outputs a series of tokens into the <output_file>" << std::endl;
+    command_.SetLong(description.str());
   }
 
+  /**
+   * @brief Returns a modifiable reference of the cli
+   * @return
+   */
   inline Command& GetCli() { return command_; }
 
   void Run(const int argc, const char* argv[]);

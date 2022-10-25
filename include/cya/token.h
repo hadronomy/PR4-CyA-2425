@@ -24,6 +24,9 @@
 
 namespace cya {
 
+/**
+ * @brief Stores information about a token found within a text
+ */
 class Token {
  public:
   Token(const int line,
