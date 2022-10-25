@@ -65,38 +65,38 @@ int main(int argc, const char* argv[]) {
   cya::CodeAnalyzer code_analyzer(cya::kTokenDefinitions);
   std::vector<std::string> lines = cya::ReadFileLines(root_cmd.GetPositionalArg(0));
   code_analyzer.Analyze(lines);
-  std::cout << "PROGRAM: " << root_cmd.GetPositionalArg(0) << std::endl;
+  std::ofstream output_file(root_cmd.GetPositionalArg(1));
+  output_file << "PROGRAM: " << root_cmd.GetPositionalArg(0) << std::endl;
   auto blocks = ParseMultiline(code_analyzer.GetTokens("COMMENTS"));
   const bool kHasDescription = code_analyzer.HasTokens("COMMENTS") &&
           code_analyzer.GetTokens("COMMENTS").front().GetLine() == 1;
   code_analyzer.RemoveTokens("COMMENTS");
   if (kHasDescription) {
-    std::cout << "DESCRIPTION: " << std::endl;
+    output_file << "DESCRIPTION: " << std::endl;
     for (const auto& token : blocks.at(0)) {
-      std::cout << token << std::endl;
+      output_file << token << std::endl;
     }
-    std::cout << std::endl;
+    output_file << std::endl;
   }
   for (const auto& pair : code_analyzer.GetAllTokens()) {
     const auto& kTokens = pair.second;
-    std::cout << pair.first << ":" << std::endl;
+    output_file << pair.first << ":" << std::endl;
     if (code_analyzer.IsMultiline(pair.first)) {
-      PrintMultiline(std::cout, pair.second);
+      PrintMultiline(output_file, pair.second);
     } else {
       for (const auto& token : kTokens) {
-        std::cout << token << std::endl;
+        output_file << token << std::endl;
       }
     }
-    std::cout << std::endl;
+    output_file << std::endl;
   }
-  std::cout << "COMMENTS: " << std::endl;
+  output_file << "COMMENTS: " << std::endl;
   if (kHasDescription) {
     auto description_block = blocks.at(0);
-    std::cout << "[Line " << description_block.front().GetLine() << "-" << description_block.back().GetLine() << "] ";
-    std::cout << "DESCRIPTION" << std::endl;
+    output_file << "[Line " << description_block.front().GetLine() << "-" << description_block.back().GetLine() << "] ";
+    output_file << "DESCRIPTION" << std::endl;
     blocks = std::vector<std::vector<cya::Token>>(blocks.begin() + 1, blocks.end());
   }
-  PrintMultilineBlocks(std::cout, blocks);
-  std::cout << std::endl;
+  PrintMultilineBlocks(output_file, blocks);
   return 0;
 }
