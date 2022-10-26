@@ -65,10 +65,23 @@ const TokenDefinition kVariableDefinition("VARIABLES", std::regex(R"(^ *(int|dou
   }
 );
 
+const TokenDefinition kIdentifierDefinition("IDENTIFIERS", std::regex(R"( *[<]?([^0-9 ">]+)[(;>])"),
+  [](const std::smatch& match) {
+    std::map<std::string, std::string> values;
+    values.emplace("value", match[1]);
+    return values;
+  }, [](const Token& token) {
+    std::stringstream result;
+    result << "[Line " << token.GetLine() << "] " << token.GetValues().at("value");
+    return result.str();
+  }
+);
+
 const std::vector<TokenDefinition> kTokenDefinitions{
   kCommentDefinition,
   kStatementDefinition,
   kVariableDefinition,
+  kIdentifierDefinition
 };
 
 }

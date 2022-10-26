@@ -13,6 +13,14 @@ DESCRIPTION:
  * @see https://github.com/IB-2022-2023/IB-class-code-examples/
  */
 
+IDENTIFIERS:
+[Line 14] iostream
+[Line 15] cassert
+[Line 36] limit
+[Line 37] limit
+[Line 38] limit
+[Line 39] (double)Factorial
+
 STATEMENTS:
 [Line 27] LOOP: for
 [Line 38] LOOP: for
