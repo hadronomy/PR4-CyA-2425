@@ -6,7 +6,7 @@
  * @brief Ejercicios de programacion
  * Version 1: Funcion factorial
  *
- * @see https :// github .com/IB -2023 -2024/ IB -class -code - examples /
+ * @see https://github.com/IB-2023-2024/IB-class-code-examples/
  */
 
 #include <cassert>
@@ -27,6 +27,7 @@ int Factorial(int number) {
   }
 }
 
+/* Hey */
 int main() {
   std ::cout << " Introduzca el numero de factoriales a calcular : ";
   int limit;

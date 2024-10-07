@@ -72,36 +72,20 @@ const TokenDefinition kVariableDefinition(
       return result.str();
     });
 
-const TokenDefinition kIdentifierDefinition(
-    "IDENTIFIERS", std::regex(R"( *[<]?([^0-9 ">]+)[(;>])"),
+const TokenDefinition kMainIdentifierDefinition(
+    "MAIN", std::regex(R"(int +main *\( *\))"),
     [](const std::smatch& match) {
       std::map<std::string, std::string> values;
-      values.emplace("value", match[1]);
       return values;
     },
     [](const Token& token) {
       std::stringstream result;
-      result << "[Line " << token.GetLine() << "] "
-             << token.GetValues().at("value");
-      return result.str();
-    });
-
-const TokenDefinition kStringDefinition(
-    "STRINGS", std::regex(R"(\"([^\"]*)\")"),
-    [](const std::smatch& match) {
-      std::map<std::string, std::string> values;
-      values.emplace("value", match[1]);
-      return values;
-    },
-    [](const Token& token) {
-      std::stringstream result;
-      result << "[Line " << token.GetLine() << "] "
-             << token.GetValues().at("value");
+      result << "True";
       return result.str();
     });
 
 const std::vector<TokenDefinition> kTokenDefinitions{
     kCommentDefinition, kStatementDefinition, kVariableDefinition,
-    kIdentifierDefinition, kStringDefinition};
+    kMainIdentifierDefinition};
 
 }  // namespace cya
