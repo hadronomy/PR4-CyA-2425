@@ -53,7 +53,7 @@ class CodeAnalyzer {
     return tokens_;
   }
 
-  inline bool HasTokens(const std::string& token_name) {
+  inline bool HasTokens(const std::string& token_name) const {
     return tokens_.count(token_name);
   }
 

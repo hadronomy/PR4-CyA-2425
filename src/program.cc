@@ -14,8 +14,10 @@
  */
 
 #include <fstream>
+#include <ostream>
 
 #include "cya/code_analyzer.h"
+#include "cya/command.h"
 #include "cya/program.h"
 #include "cya/token_definitions.h"
 #include "cya/utils.h"
@@ -28,18 +30,27 @@ namespace cya {
  * @param argv
  */
 void Program::Run(const int argc, const char* argv[]) {
-  GetCli().Parse(argc, argv);
+  Command cli = GetCli();
+  cli.Parse(argc, argv);
+  const auto& input_path = cli.GetPositionalArg(0);
+  const auto& output_path = cli.GetPositionalArg(1);
   CodeAnalyzer code_analyzer(kTokenDefinitions);
-  std::vector<std::string> lines = ReadFileLines(GetCli().GetPositionalArg(0));
-  code_analyzer.Analyze(lines);
-  std::ofstream output_file(GetCli().GetPositionalArg(1));
-  output_file << "PROGRAM: " << GetCli().GetPositionalArg(0) << std::endl;
-  auto blocks = cya::ParseMultiline(code_analyzer.GetTokens("COMMENTS"));
-  const bool kHasDescription =
-      code_analyzer.HasTokens("COMMENTS") &&
-      code_analyzer.GetTokens("COMMENTS").front().GetLine() == 1;
+  const auto& input_lines = ReadFileLines(input_path);
+  code_analyzer.Analyze(input_lines);
+  std::ofstream output_file = std::ofstream(output_path);
+  PrintResults(code_analyzer, output_file, cli);
+}
+
+void PrintResults(CodeAnalyzer& code_analyzer, std::ostream& output_file,
+                  const Command& cli) {
+  const auto& input_path = cli.GetPositionalArg(0);
+  output_file << "PROGRAM: " << input_path << std::endl;
+  const auto& comment_tokens = code_analyzer.GetTokens("COMMENTS");
+  auto blocks = cya::ParseMultiline(comment_tokens);
+  const bool has_description = code_analyzer.HasTokens("COMMENTS") &&
+                               comment_tokens.front().GetLine() == 1;
   code_analyzer.RemoveTokens("COMMENTS");
-  if (kHasDescription) {
+  if (has_description) {
     output_file << "DESCRIPTION: " << std::endl;
     for (const auto& token : blocks.at(0)) {
       output_file << token << std::endl;
@@ -59,7 +70,7 @@ void Program::Run(const int argc, const char* argv[]) {
     output_file << std::endl;
   }
   output_file << "COMMENTS: " << std::endl;
-  if (kHasDescription) {
+  if (has_description) {
     auto description_block = blocks.at(0);
     output_file << "[Line " << description_block.front().GetLine() << "-"
                 << description_block.back().GetLine() << "] ";

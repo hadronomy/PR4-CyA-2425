@@ -54,6 +54,18 @@ std::vector<std::string> ReadFileLines(const std::string& input_file_path) {
   return lines;
 }
 
+std::string ReadFile(const std::string& input_file_path) {
+  std::ifstream input_file(input_file_path);
+  if (!input_file.is_open()) {
+    std::cerr << "The file at " << input_file_path << " cannot be opened"
+              << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  std::string file_content((std::istreambuf_iterator<char>(input_file)),
+                           std::istreambuf_iterator<char>());
+  return file_content;
+}
+
 /**
  * @brief Prints a multiline representation of the given tokens
  * @param out

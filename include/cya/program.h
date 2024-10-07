@@ -17,6 +17,7 @@
 
 #include <sstream>
 
+#include "cya/code_analyzer.h"
 #include "cya/command.h"
 
 namespace cya {
@@ -46,5 +47,8 @@ class Program {
  private:
   Command command_;
 };
+
+void PrintResults(CodeAnalyzer& code_analyzer, std::ostream& output_file,
+                  const Command& cli);
 
 }  // namespace cya

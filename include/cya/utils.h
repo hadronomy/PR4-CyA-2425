@@ -30,6 +30,7 @@ void PrintMultilineBlocks(std::ostream& out,
                           const std::vector<std::vector<Token>>& blocks);
 std::vector<std::vector<Token>> ParseMultiline(
     const std::vector<Token>& tokens);
+std::string ReadFile(const std::string& input_file_path);
 
 }  // namespace cya
 
