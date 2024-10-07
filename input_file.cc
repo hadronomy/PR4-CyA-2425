@@ -3,18 +3,14 @@
  * Escuela Superior de Ingenieria y Tecnologia
  * Informatica Basica
  *
- * @author F. de Sande
- * @date 23. oct .2022
- * @brief Ejercicios Informatica Basica
+ * @brief Ejercicios de programacion
  * Version 1: Funcion factorial
  *
- * @see https://github.com/IB-2024-2025/IB-class-code-examples/
+ * @see https :// github .com/IB -2023 -2024/ IB -class -code - examples /
  */
 
 #include <cassert>
 #include <iostream>
-
-int holis = 1;
 
 // Returns the factorial of the argument
 int Factorial(int number) {
@@ -32,11 +28,11 @@ int Factorial(int number) {
 }
 
 int main() {
-  std::cout << " Introduzca el numero de factoriales a calcular : ";
+  std ::cout << " Introduzca el numero de factoriales a calcular : ";
   int limit;
-  std::cin >> limit;
+  std ::cin >> limit;
   for (int i = 1; i <= limit; ++i) {
-    std::cout << i << "! = " << (double)Factorial(i) << std::endl;
+    std ::cout << i << "! = " << (double)Factorial(i) << std ::endl;
   }
   return 0;
 }
