@@ -3,19 +3,19 @@
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingenierıa Informática
  * Asignatura: Computabilidad y Algoritmia
- * Curso: 2º
- * Práctica 4: Code Analyzer Curso 2022-2023
+ * Curso: 4º
+ * Práctica 4: Code Analyzer Curso 2024-2025
  * Grado en Ingeniería Informática Computabilidad y Algoritmia
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
- * Fecha: 24/10/2022
+ * Fecha: 07/10/2024
  * Archivo command.cc: Command implementation
  * Referencias:
  */
 
-#include <vector>
 #include <iostream>
 #include <regex>
+#include <vector>
 
 #include "cya/command.h"
 
@@ -27,7 +27,7 @@ namespace cya {
  * @param argv
  * @return
  */
-Command& Command::Parse(const int argc, const char *argv[]) {
+Command& Command::Parse(const int argc, const char* argv[]) {
   std::vector<std::string> arguments(argv + 1, argv + argc);
   return Parse(arguments);
 }
@@ -42,13 +42,16 @@ Command& Command::Parse(const std::vector<std::string>& arguments) {
   for (int i = 0; i < arguments.size(); ++i) {
     const auto& argument = arguments[i];
     if (subcommands_.count(argument)) {
-      subcommands_.at(argument)->Parse(std::vector<std::string>(arguments.begin() + 1, arguments.end()));
+      subcommands_.at(argument)->Parse(
+          std::vector<std::string>(arguments.begin() + 1, arguments.end()));
       return static_cast<Command&>(*this);
     }
     if (argument[0] != '-') {
       if (positional_arguments.size() + 1 > max_positional_) {
-        std::cerr << "Provided more positional arguments than expected" << std::endl;
-        std::cerr << "Run with the --help flag for more information" << std::endl;
+        std::cerr << "Provided more positional arguments than expected"
+                  << std::endl;
+        std::cerr << "Run with the --help flag for more information"
+                  << std::endl;
         exit(EXIT_FAILURE);
       }
       positional_arguments.emplace_back(argument);
@@ -56,7 +59,7 @@ Command& Command::Parse(const std::vector<std::string>& arguments) {
     }
     std::smatch match;
     if (std::regex_search(argument, match, std::regex(R"(--?(\S+))"))) {
-      args_.Parse(match[1], ""); // TODO: Parse arguments with values
+      args_.Parse(match[1], "");  // TODO: Parse arguments with values
       if (args_.IsBool("help")) {
         ShowHelp();
         exit(EXIT_SUCCESS);
@@ -68,7 +71,8 @@ Command& Command::Parse(const std::vector<std::string>& arguments) {
     return static_cast<Command&>(*this);
   }
   if (positional_arguments.size() < min_positional_) {
-    std::cerr << "Provided less positional arguments than expected" << std::endl;
+    std::cerr << "Provided less positional arguments than expected"
+              << std::endl;
     std::cerr << "Run with the --help flag for more information" << std::endl;
     exit(EXIT_FAILURE);
   }
@@ -87,8 +91,9 @@ void Command::ShowHelp() const {
     std::cout << GetLong() << std::endl;
   }
   std::cout << "FLAGS" << std::endl;
-  std::cout << "--help, -h\tShows helpful information about this command" << std::endl;
+  std::cout << "--help, -h\tShows helpful information about this command"
+            << std::endl;
   std::cout << std::endl;
 }
 
-}
+}  // namespace cya

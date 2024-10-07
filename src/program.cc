@@ -3,20 +3,20 @@
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingenierıa Informática
  * Asignatura: Computabilidad y Algoritmia
- * Curso: 2º
- * Práctica 4: Code Analyzer Curso 2022-2023
+ * Curso: 4º
+ * Práctica 4: Code Analyzer Curso 2024-2025
  * Grado en Ingeniería Informática Computabilidad y Algoritmia
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
- * Fecha: 24/10/2022
+ * Fecha: 07/10/2024
  * Archivo program.cc: Program implementation
  * Referencias:
  */
 
 #include <fstream>
 
-#include "cya/program.h"
 #include "cya/code_analyzer.h"
+#include "cya/program.h"
 #include "cya/token_definitions.h"
 #include "cya/utils.h"
 
@@ -35,8 +35,9 @@ void Program::Run(const int argc, const char* argv[]) {
   std::ofstream output_file(GetCli().GetPositionalArg(1));
   output_file << "PROGRAM: " << GetCli().GetPositionalArg(0) << std::endl;
   auto blocks = cya::ParseMultiline(code_analyzer.GetTokens("COMMENTS"));
-  const bool kHasDescription = code_analyzer.HasTokens("COMMENTS") &&
-                               code_analyzer.GetTokens("COMMENTS").front().GetLine() == 1;
+  const bool kHasDescription =
+      code_analyzer.HasTokens("COMMENTS") &&
+      code_analyzer.GetTokens("COMMENTS").front().GetLine() == 1;
   code_analyzer.RemoveTokens("COMMENTS");
   if (kHasDescription) {
     output_file << "DESCRIPTION: " << std::endl;
@@ -60,11 +61,12 @@ void Program::Run(const int argc, const char* argv[]) {
   output_file << "COMMENTS: " << std::endl;
   if (kHasDescription) {
     auto description_block = blocks.at(0);
-    output_file << "[Line " << description_block.front().GetLine() << "-" << description_block.back().GetLine() << "] ";
+    output_file << "[Line " << description_block.front().GetLine() << "-"
+                << description_block.back().GetLine() << "] ";
     output_file << "DESCRIPTION" << std::endl;
     blocks = std::vector<std::vector<Token>>(blocks.begin() + 1, blocks.end());
   }
   cya::PrintMultilineBlocks(output_file, blocks);
 }
 
-} // cya
+}  // namespace cya

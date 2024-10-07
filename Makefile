@@ -1,4 +1,4 @@
-PROJECT_NAME = PR4-CYA-2223
+PROJECT_NAME = PR4-CYA-2425
 DIR_PATH=$(shell realpath .)
 DIR_NAME=$(shell basename ${DIR_PATH})
 

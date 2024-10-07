@@ -3,12 +3,12 @@
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingenierıa Informática
  * Asignatura: Computabilidad y Algoritmia
- * Curso: 2º
- * Práctica 4: Code Analyzer Curso 2022-2023
+ * Curso: 4º
+ * Práctica 4: Code Analyzer Curso 2024-2025
  * Grado en Ingeniería Informática Computabilidad y Algoritmia
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
- * Fecha: 24/10/2022
+ * Fecha: 07/10/2024
  * Archivo main.cc: client program.
  * Referencias:
  */

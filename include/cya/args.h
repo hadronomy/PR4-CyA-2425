@@ -3,80 +3,81 @@
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingenierıa Informática
  * Asignatura: Computabilidad y Algoritmia
- * Curso: 2º
- * Práctica 4: Code Analyzer Curso 2022-2023
+ * Curso: 4º
+ * Práctica 4: Code Analyzer Curso 2024-2025
  * Grado en Ingeniería Informática Computabilidad y Algoritmia
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
- * Fecha: 24/10/2022
+ * Fecha: 07/10/2024
  * Archivo args.h: Args definition
  * Referencias:
  */
 
-#ifndef CYA_ARGS_H_
-#define CYA_ARGS_H_
+#pragma once
 
+#include <any>
+#include <iostream>
 #include <map>
 #include <string>
 #include <typeinfo>
-#include <any>
-#include <iostream>
 
 namespace cya {
 
-class Argument { };
-template<class TType>
+class Argument {};
+template <class TType>
 class ArgumentValue : Argument {
  public:
-  ArgumentValue() : Argument() { }
+  ArgumentValue() : Argument() {}
   TType GetValue() const { return value_; }
+
  private:
   TType value_;
 };
 
 class Args {
  public:
-  Args() { }
+  Args() {}
 
   Args& Parse(const std::string& arg, const std::string& next_token);
 
-  template<class TType>
+  template <class TType>
   inline bool IsType(const std::string& name) {
     return expected_arguments_.at(name) == typeid(TType).name();
   }
 
-  inline bool IsBool(const std::string& name) {
-    return IsType<bool>(name);
-  }
+  inline bool IsBool(const std::string& name) { return IsType<bool>(name); }
 
   inline bool IsString(const std::string& name) {
     return IsType<std::string>(name);
   }
 
-  inline bool IsInt(const std::string& name) {
-    return IsType<int>(name);
-  }
+  inline bool IsInt(const std::string& name) { return IsType<int>(name); }
 
-  inline Args& Expect(const std::string& long_name, const std::string& short_name, const std::string& argument_type) {
+  inline Args& Expect(const std::string& long_name,
+                      const std::string& short_name,
+                      const std::string& argument_type) {
     expected_arguments_.emplace(long_name, argument_type);
     if (!short_name.empty())
       aliases_.emplace(short_name, long_name);
     return static_cast<Args&>(*this);
   }
 
-  inline Args& ExpectBool(const std::string& long_name, const std::string& short_name = "") {
+  inline Args& ExpectBool(const std::string& long_name,
+                          const std::string& short_name = "") {
     return Expect(long_name, short_name, typeid(bool).name());
   }
 
-  inline Args& ExpectString(const std::string& long_name, const std::string& short_name = "") {
+  inline Args& ExpectString(const std::string& long_name,
+                            const std::string& short_name = "") {
     return Expect(long_name, short_name, typeid(std::string).name());
   }
 
-  inline Args& ExpectInt(const std::string& long_name, const std::string& short_name = "") {
+  inline Args& ExpectInt(const std::string& long_name,
+                         const std::string& short_name = "") {
     return Expect(long_name, short_name, typeid(int).name());
   }
 
-  template<class TType>
+  template <class TType>
   inline TType GetArg(const std::string& name) {
     return std::any_cast<TType>(arguments_.at(name));
   }
@@ -91,9 +92,7 @@ class Args {
     return GetArg<std::string>(name);
   }
 
-  inline int GetInt(const std::string& name) {
-    return GetArg<int>(name);
-  }
+  inline int GetInt(const std::string& name) { return GetArg<int>(name); }
 
  private:
   std::map<std::string, std::string> aliases_;
@@ -101,7 +100,8 @@ class Args {
   std::map<std::string, std::any> arguments_;
 };
 
-inline Args& Args::Parse(const std::string& arg, const std::string& next_token) {
+inline Args& Args::Parse(const std::string& arg,
+                         const std::string& next_token) {
   if (!expected_arguments_.count(arg) && !aliases_.count(arg)) {
     std::cerr << "Unexpected argument: " << arg << std::endl;
     std::cerr << "--help for more information" << std::endl;
@@ -109,13 +109,12 @@ inline Args& Args::Parse(const std::string& arg, const std::string& next_token) 
   }
   std::string unaliased_arg = aliases_.count(arg) ? aliases_.at(arg) : arg;
   if (!IsBool(unaliased_arg)) {
-    std::cerr << "Currently I cannot parse anything but booleans :(" << std::endl;
+    std::cerr << "Currently I cannot parse anything but booleans :("
+              << std::endl;
     exit(EXIT_FAILURE);
   }
   arguments_.emplace(unaliased_arg, true);
   return static_cast<Args&>(*this);
 }
 
-}
-
-#endif // CYA_ARGS_H_
+}  // namespace cya

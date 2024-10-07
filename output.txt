@@ -10,7 +10,7 @@ DESCRIPTION:
  * @brief Ejercicios Informatica Basica
  * Version 1: Funcion factorial
  *
- * @see https://github.com/IB-2022-2023/IB-class-code-examples/
+ * @see https://github.com/IB-2024-2025/IB-class-code-examples/
  */
 
 IDENTIFIERS:

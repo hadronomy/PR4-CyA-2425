@@ -3,22 +3,22 @@
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingenierıa Informática
  * Asignatura: Computabilidad y Algoritmia
- * Curso: 2º
- * Práctica 4: Code Analyzer Curso 2022-2023
+ * Curso: 4º
+ * Práctica 4: Code Analyzer Curso 2024-2025
  * Grado en Ingeniería Informática Computabilidad y Algoritmia
  * Autor: Pablo Hernández Jiménez
  * Correo: alu0101495934@ull.edu.es
- * Fecha: 24/10/2022
+ * Fecha: 07/10/2024
  * Archivo utils.cc: utility functions implementations
  * Referencias:
  */
 
-#include <iostream>
-#include <fstream>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 
-#include "cya/utils.h"
 #include "cya/token.h"
+#include "cya/utils.h"
 
 namespace cya {
 
@@ -28,7 +28,8 @@ namespace cya {
  * @return
  */
 std::string ToUpper(std::string input_string) {
-  std::transform(input_string.begin(), input_string.end(), input_string.begin(), ::toupper);
+  std::transform(input_string.begin(), input_string.end(), input_string.begin(),
+                 ::toupper);
   return input_string;
 }
 
@@ -40,7 +41,8 @@ std::string ToUpper(std::string input_string) {
 std::vector<std::string> ReadFileLines(const std::string& input_file_path) {
   std::ifstream input_file(input_file_path);
   if (!input_file.is_open()) {
-    std::cerr << "The file at " << input_file_path << " could not be opened" << std::endl;
+    std::cerr << "The file at " << input_file_path << " could not be opened"
+              << std::endl;
     exit(EXIT_FAILURE);
   }
   std::vector<std::string> lines;
@@ -61,7 +63,8 @@ void PrintMultiline(std::ostream& out, const std::vector<Token>& tokens) {
   if (tokens.front().GetLine() == tokens.back().GetLine()) {
     out << "[Line " << tokens.front().GetLine() << "]" << std::endl;
   } else {
-    out << "[Line " << tokens.front().GetLine() << "-" << tokens.back().GetLine() << "]" << std::endl;
+    out << "[Line " << tokens.front().GetLine() << "-"
+        << tokens.back().GetLine() << "]" << std::endl;
   }
   for (const auto& token : tokens) {
     out << token << std::endl;
@@ -73,7 +76,8 @@ void PrintMultiline(std::ostream& out, const std::vector<Token>& tokens) {
  * @param out
  * @param blocks
  */
-void PrintMultilineBlocks(std::ostream& out, const std::vector<std::vector<Token>>& blocks) {
+void PrintMultilineBlocks(std::ostream& out,
+                          const std::vector<std::vector<Token>>& blocks) {
   for (const auto& block : blocks) {
     PrintMultiline(out, block);
   }
@@ -85,22 +89,26 @@ void PrintMultilineBlocks(std::ostream& out, const std::vector<std::vector<Token
  * @param tokens
  * @return
  */
-std::vector<std::vector<cya::Token>> ParseMultiline(const std::vector<cya::Token>& tokens) {
+std::vector<std::vector<cya::Token>> ParseMultiline(
+    const std::vector<cya::Token>& tokens) {
   std::vector<std::vector<cya::Token>> blocks;
-  if (tokens.empty()) return blocks;
+  if (tokens.empty())
+    return blocks;
   std::vector<cya::Token> contiguous_tokens;
   contiguous_tokens.push_back(tokens.front());
   for (int i = 1; i < tokens.size(); ++i) {
     const auto& kToken = tokens[i];
-    if (contiguous_tokens.front().GetLine() + contiguous_tokens.size() != kToken.GetLine()) {
+    if (contiguous_tokens.front().GetLine() + contiguous_tokens.size() !=
+        kToken.GetLine()) {
       blocks.emplace_back(contiguous_tokens);
       contiguous_tokens = std::vector<cya::Token>();
     }
     contiguous_tokens.push_back(kToken);
   }
-  if (contiguous_tokens.empty()) return blocks;
+  if (contiguous_tokens.empty())
+    return blocks;
   blocks.emplace_back(contiguous_tokens);
   return blocks;
 }
 
-}
+}  // namespace cya
