@@ -41,7 +41,7 @@ std::string ToUpper(std::string input_string) {
 std::vector<std::string> ReadFileLines(const std::string& input_file_path) {
   std::ifstream input_file(input_file_path);
   if (!input_file.is_open()) {
-    std::cerr << "The file at " << input_file_path << " could not be opened"
+    std::cerr << "The file at " << input_file_path << " cannot be opened"
               << std::endl;
     exit(EXIT_FAILURE);
   }
