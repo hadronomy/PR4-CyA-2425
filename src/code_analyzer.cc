@@ -16,9 +16,9 @@
 #include <map>
 #include <regex>
 #include <string>
-#include "cya/token.h"
 
 #include "cya/code_analyzer.h"
+#include "cya/token.h"
 
 namespace cya {
 
