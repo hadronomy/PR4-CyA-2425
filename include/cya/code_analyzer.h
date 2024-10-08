@@ -16,7 +16,6 @@
 #pragma once
 
 #include <map>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -31,13 +30,7 @@ namespace cya {
 class CodeAnalyzer {
  public:
   explicit CodeAnalyzer(const std::vector<TokenDefinition>& definitions)
-      : token_definitions_(definitions), tokens_(), multiline_tokens_() {
-    for (const auto& definition : definitions) {
-      if (definition.IsMultiline()) {
-        multiline_tokens_.emplace(definition.GetName());
-      }
-    }
-  }
+      : token_definitions_(definitions), tokens_() {}
 
   template <class... TType>
   explicit CodeAnalyzer(TType... definition)
@@ -57,10 +50,6 @@ class CodeAnalyzer {
     return tokens_.count(token_name);
   }
 
-  inline bool IsMultiline(const std::string& token_name) const {
-    return multiline_tokens_.count(token_name);
-  }
-
   inline void AddToken(const std::string& token_name, const Token& token) {
     if (!tokens_.count(token_name)) {
       tokens_.emplace(token_name, std::vector<Token>());
@@ -72,12 +61,11 @@ class CodeAnalyzer {
     tokens_.erase(token_name);
   }
 
-  void Analyze(const std::vector<std::string>& lines);
+  void Analyze(const std::string& text);
 
  private:
   std::vector<TokenDefinition> token_definitions_;
   std::map<std::string, std::vector<Token>> tokens_;
-  std::set<std::string> multiline_tokens_;
 };
 
 }  // namespace cya

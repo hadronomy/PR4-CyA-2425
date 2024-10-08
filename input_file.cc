@@ -29,11 +29,11 @@ int Factorial(int number) {
 
 /* Hey */
 int main() {
-  std ::cout << " Introduzca el numero de factoriales a calcular : ";
+  std::cout << "Introduzca el numero de factoriales a calcular: ";
   int limit;
-  std ::cin >> limit;
+  std::cin >> limit;
   for (int i = 1; i <= limit; ++i) {
-    std ::cout << i << "! = " << (double)Factorial(i) << std ::endl;
+    std::cout << i << "! = " << (double)Factorial(i) << std::endl;
   }
   return 0;
 }

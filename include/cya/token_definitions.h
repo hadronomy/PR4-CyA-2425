@@ -22,8 +22,7 @@
 namespace cya {
 
 const TokenDefinition kCommentDefinition(
-    "COMMENTS",
-    std::regex(R"((/\*\*( |.)*)|(^ *\*( |.)*)|(( |.)*\*/)|(//( |.)*))"),
+    "COMMENTS", std::regex(R"(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/|//.*)"),
     [](const std::smatch& match) {
       std::map<std::string, std::string> values;
       values.emplace("value", match[0]);
@@ -33,8 +32,7 @@ const TokenDefinition kCommentDefinition(
       std::stringstream result;
       result << token.GetValue("value");
       return result.str();
-    },
-    true);
+    });
 
 const TokenDefinition kStatementDefinition(
     "STATEMENTS", std::regex(R"((while|for) \(.*\))"),
@@ -51,7 +49,7 @@ const TokenDefinition kStatementDefinition(
     });
 
 const TokenDefinition kVariableDefinition(
-    "VARIABLES", std::regex(R"(^ *(int|double) +(\S*) *(= *(\S*))?;)"),
+    "VARIABLES", std::regex(R"((?:^|\n) *(int|double) +(\S*) *(= *(\S*))?;)"),
     [](const std::smatch& match) {
       std::map<std::string, std::string> values;
       values.emplace("type", match[1]);

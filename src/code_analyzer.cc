@@ -15,6 +15,8 @@
 
 #include <map>
 #include <regex>
+#include <string>
+#include "cya/token.h"
 
 #include "cya/code_analyzer.h"
 
@@ -24,17 +26,57 @@ namespace cya {
  * @brief Analyzes the given lines and saves the resulting tokens
  * @param lines
  */
-void CodeAnalyzer::Analyze(const std::vector<std::string>& lines) {
-  for (int i = 0; i < lines.size(); ++i) {
-    const auto& line = lines[i];
-    for (const auto& definition : token_definitions_) {
-      std::smatch match;
-      if (std::regex_search(line, match, definition.GetRegex())) {
-        std::map<std::string, std::string> values =
-            definition.GetSerializer()(match);
-        Token token(i + 1, 0, values, definition.GetToString());
-        AddToken(definition.GetName(), token);
+void CodeAnalyzer::Analyze(const std::string& text) {
+  for (const auto& definition : token_definitions_) {
+    std::smatch match;
+    const std::regex& regex = definition.GetRegex();
+    std::sregex_iterator end;
+    std::sregex_iterator iter(text.begin(), text.end(), regex);
+    int current_line = 1;
+    std::string::const_iterator current_line_start = text.begin();
+    for (; iter != end; ++iter) {
+      std::smatch match = *iter;
+      auto match_start = match.position();
+      auto match_lenght = match.length();
+      auto match_end = match_start + match_lenght;
+
+      int start_line = current_line;
+      std::string::const_iterator temp_line_start = current_line_start;
+
+      while (text.begin() + match_start >= current_line_start &&
+             current_line_start != text.end()) {
+        if (*current_line_start == '\n') {
+          current_line++;
+        }
+        current_line_start++;
       }
+
+      int start_column = match_start - (current_line_start - text.begin());
+      int end_line = start_line;
+      int end_column = start_column;
+
+      for (auto it = text.begin() + match_start; it != text.begin() + match_end;
+           ++it) {
+        if (*it == '\n') {
+          end_line++;
+          temp_line_start = it + 1;
+        }
+      }
+
+      if (end_line > start_line) {
+        end_column = match_end - (temp_line_start - text.begin());
+      }
+
+      std::map<std::string, std::string> values =
+          definition.GetSerializer()(match);
+
+      std::optional<int> optional_end_line =
+          end_line == start_line ? std::optional<int>(std::nullopt) : end_line;
+
+      TokenPosition token_position{current_line, optional_end_line,
+                                   start_column, end_column};
+      Token token(token_position, values, definition.GetToString());
+      AddToken(definition.GetName(), token);
     }
   }
 }

@@ -17,10 +17,18 @@
 
 #include <functional>
 #include <map>
+#include <optional>
 #include <ostream>
 #include <string>
 
 namespace cya {
+
+struct TokenPosition {
+  int start_line;
+  std::optional<int> end_line;
+  int start_column;
+  int end_column;
+};
 
 /**
  * @brief Stores information about a token found within a text
@@ -30,13 +38,17 @@ class Token {
   Token(const int line, const int position,
         const std::map<std::string, std::string>& values,
         const std::function<std::string(const Token&)>& to_string_func)
-      : line_(line),
-        position_(position),
+      : position_{TokenPosition{line, std::nullopt, position, position}},
         values_(values),
         to_string_func_(to_string_func) {}
 
-  inline int GetLine() const { return line_; }
-  inline int GetPosition() const { return position_; }
+  Token(const TokenPosition& position,
+        const std::map<std::string, std::string>& values,
+        const std::function<std::string(const Token&)>& to_string_func)
+      : position_(position), values_(values), to_string_func_(to_string_func) {}
+
+  inline int GetLine() const { return position_.start_line; }
+  inline TokenPosition GetPosition() const { return position_; }
 
   inline std::string GetValue(const std::string& value_name) const {
     return values_.at(value_name);
@@ -55,8 +67,7 @@ class Token {
   friend std::ostream& operator<<(std::ostream& out, const Token& input_token);
 
  private:
-  int line_;
-  int position_;
+  TokenPosition position_;
   std::map<std::string, std::string> values_;
   std::function<std::string(const Token&)> to_string_func_;
 };

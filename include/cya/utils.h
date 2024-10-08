@@ -22,6 +22,7 @@
 namespace cya {
 
 class Token;
+class TokenPosition;
 
 std::string ToUpper(std::string input_string);
 std::vector<std::string> ReadFileLines(const std::string& input_file_path);
@@ -31,6 +32,7 @@ void PrintMultilineBlocks(std::ostream& out,
 std::vector<std::vector<Token>> ParseMultiline(
     const std::vector<Token>& tokens);
 std::string ReadFile(const std::string& input_file_path);
+std::string LineIdicatorFromPosition(const TokenPosition& position);
 
 }  // namespace cya
 

@@ -35,8 +35,8 @@ void Program::Run(const int argc, const char* argv[]) {
   const auto& input_path = cli.GetPositionalArg(0);
   const auto& output_path = cli.GetPositionalArg(1);
   CodeAnalyzer code_analyzer(kTokenDefinitions);
-  const auto& input_lines = ReadFileLines(input_path);
-  code_analyzer.Analyze(input_lines);
+  const auto& input_text = ReadFile(input_path);
+  code_analyzer.Analyze(input_text);
   std::ofstream output_file = std::ofstream(output_path);
   PrintResults(code_analyzer, output_file, cli);
 }
@@ -60,20 +60,18 @@ void PrintResults(CodeAnalyzer& code_analyzer, std::ostream& output_file,
   for (const auto& pair : code_analyzer.GetAllTokens()) {
     const auto& kTokens = pair.second;
     output_file << pair.first << ":" << std::endl;
-    if (code_analyzer.IsMultiline(pair.first)) {
-      cya::PrintMultiline(output_file, pair.second);
-    } else {
-      for (const auto& token : kTokens) {
-        output_file << token << std::endl;
-      }
+    for (const auto& token : kTokens) {
+      output_file << token << std::endl;
     }
     output_file << std::endl;
   }
   output_file << "COMMENTS: " << std::endl;
   if (has_description) {
     auto description_block = blocks.at(0);
-    output_file << "[Line " << description_block.front().GetLine() << "-"
-                << description_block.back().GetLine() << "] ";
+    auto position = description_block.front().GetPosition();
+    auto start_line = position.start_line;
+    auto end_line = position.end_line;
+    output_file << LineIdicatorFromPosition(position) << std::endl;
     output_file << "DESCRIPTION" << std::endl;
     blocks = std::vector<std::vector<Token>>(blocks.begin() + 1, blocks.end());
   }

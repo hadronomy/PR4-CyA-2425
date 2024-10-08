@@ -123,4 +123,13 @@ std::vector<std::vector<cya::Token>> ParseMultiline(
   return blocks;
 }
 
+std::string LineIdicatorFromPosition(const TokenPosition& position) {
+  if (position.end_line) {
+    std::string line = "[Line " + std::to_string(position.start_line) + "-" +
+                       std::to_string(position.end_line.value()) + "]";
+    return line;
+  }
+  return "[Line " + std::to_string(position.start_line) + "]";
+}
+
 }  // namespace cya
